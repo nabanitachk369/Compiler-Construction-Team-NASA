@@ -259,8 +259,7 @@ The project contains both successful and erroneous test programs.
 |   |
 │   └── invalid/couple of invalid tests
 │       
-└── docs/
-    └── Compiler Construction Lab Project Manual.pdf
+└── Compiler Construction Lab Project Manual.pdf
 
 ```
 
