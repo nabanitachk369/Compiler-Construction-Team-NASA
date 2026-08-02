@@ -23,6 +23,7 @@ typedef enum {
 
 typedef struct ASTNode {
     NodeType type;
+    int line;
     union {
         struct {
             struct NodeList* statements;

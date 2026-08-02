@@ -72,6 +72,18 @@ Symbol* lookup_symbol(SymbolTable* st, const char* name) {
     return NULL;
 }
 
+int is_symbol_in_current_scope(SymbolTable* st, const char* name) {
+    if (!st->current_scope) return 0;
+    Symbol* sym = st->current_scope->symbols;
+    while (sym) {
+        if (strcmp(sym->name, name) == 0) {
+            return 1;
+        }
+        sym = sym->next;
+    }
+    return 0;
+}
+
 Symbol* lookup_in_current_scope(SymbolTable* st, const char* name) {
     if (!st->current_scope) return NULL;
     

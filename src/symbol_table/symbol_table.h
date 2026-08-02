@@ -36,6 +36,7 @@ void exit_scope(SymbolTable* st);
 int add_symbol(SymbolTable* st, const char* name, DataType type, int line);
 Symbol* lookup_symbol(SymbolTable* st, const char* name);
 Symbol* lookup_in_current_scope(SymbolTable* st, const char* name);
+int is_symbol_in_current_scope(SymbolTable* st, const char* name);
 void print_symbol_table(SymbolTable* st);
 void free_symbol_table(SymbolTable* st);
 

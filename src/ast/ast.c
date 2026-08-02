@@ -7,6 +7,7 @@ ASTNode* create_node(NodeType type) {
     ASTNode* node = (ASTNode*)malloc(sizeof(ASTNode));
     memset(node, 0, sizeof(ASTNode));
     node->type = type;
+    node->line = 0;
     return node;
 }
 
@@ -220,8 +221,57 @@ void print_ast(ASTNode* node, int indent) {
 
 void free_ast(ASTNode* node) {
     if (!node) return;
-    
-    // Free based on type
-    // ... (implementation to free all allocated memory)
+
+    switch (node->type) {
+        case NODE_PROGRAM:
+        case NODE_BLOCK: {
+            NodeList* stmt = node->data.program.statements;
+            while (stmt) {
+                NodeList* next = stmt->next;
+                free_ast(stmt->node);
+                free(stmt);
+                stmt = next;
+            }
+            break;
+        }
+        case NODE_DECLARATION:
+            free(node->data.declaration.type);
+            free(node->data.declaration.name);
+            break;
+        case NODE_ASSIGNMENT:
+            free(node->data.assignment.name);
+            free_ast(node->data.assignment.expr);
+            break;
+        case NODE_IF:
+            free_ast(node->data.if_stmt.condition);
+            free_ast(node->data.if_stmt.then_stmt);
+            free_ast(node->data.if_stmt.else_stmt);
+            break;
+        case NODE_WHILE:
+            free_ast(node->data.while_stmt.condition);
+            free_ast(node->data.while_stmt.body);
+            break;
+        case NODE_PRINT:
+            free_ast(node->data.print_stmt.expr);
+            break;
+        case NODE_BINARY_OP:
+            free(node->data.binary_op.operator);
+            free_ast(node->data.binary_op.left);
+            free_ast(node->data.binary_op.right);
+            break;
+        case NODE_UNARY_OP:
+            free(node->data.unary_op.operator);
+            free_ast(node->data.unary_op.operand);
+            break;
+        case NODE_VARIABLE:
+            free(node->data.variable.name);
+            break;
+        case NODE_INT_LITERAL:
+        case NODE_FLOAT_LITERAL:
+        case NODE_BOOL_LITERAL:
+        default:
+            break;
+    }
+
     free(node);
 }

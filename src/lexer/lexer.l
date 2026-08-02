@@ -42,52 +42,52 @@ FLOATLIT {DIGIT}+"."{DIGIT}+
 
 
 
-"int"                    { TOK(INT); }
-"float"                  { TOK(FLOAT); }
-"bool"                   { TOK(BOOL); }
-"if"                     { TOK(IF); }
-"else"                   { TOK(ELSE); }
-"while"                  { TOK(WHILE); }
-"print"                  { TOK(PRINT); }
-"true"                   { yylval.ival = 1; TOK(TRUE); }
-"false"                  { yylval.ival = 0; TOK(FALSE); }
+"int"                    { TOK(KW_INT); }
+"float"                  { TOK(KW_FLOAT); }
+"bool"                   { TOK(KW_BOOL); }
+"if"                     { TOK(KW_IF); }
+"else"                   { TOK(KW_ELSE); }
+"while"                  { TOK(KW_WHILE); }
+"print"                  { TOK(KW_PRINT); }
+"true"                   { yylval.integer = 1; TOK(KW_TRUE); }
+"false"                  { yylval.integer = 0; TOK(KW_FALSE); }
 
 
-{FLOATLIT}               { yylval.fval = (float)atof(yytext); TOK(FLOAT_LIT); }
-{INTLIT}                 { yylval.ival = atoi(yytext);        TOK(INT_LIT); }
+{FLOATLIT}               { yylval.float_val = (float)atof(yytext); TOK(FLOAT_LITERAL); }
+{INTLIT}                 { yylval.integer = atoi(yytext); TOK(INTEGER_LITERAL); }
 
     /* -------------------- Identifiers -------------------- */
-{ID}                     { yylval.sval = strdup(yytext); TOK(IDENTIFIER); }
+{ID}                     { yylval.string = strdup(yytext); TOK(IDENTIFIER); }
 
     /* -------------------- Arithmetic operators -------------------- */
-"+"                      { TOK(PLUS); }
-"-"                      { TOK(MINUS); }
-"*"                      { TOK(MUL); }
-"/"                      { TOK(DIV); }
-"%"                      { TOK(MOD); }
+"+"                      { TOK(OP_PLUS); }
+"-"                      { TOK(OP_MINUS); }
+"*"                      { TOK(OP_MULT); }
+"/"                      { TOK(OP_DIV); }
+"%"                      { TOK(OP_MOD); }
 
     /* ---------- Relational operators (2-char before 1-char) ---------- */
-"<="                     { TOK(LE); }
-">="                     { TOK(GE); }
-"=="                     { TOK(EQ); }
-"!="                     { TOK(NE); }
-"<"                      { TOK(LT); }
-">"                      { TOK(GT); }
+"<="                     { TOK(OP_LE); }
+">="                     { TOK(OP_GE); }
+"=="                     { TOK(OP_EQ); }
+"!="                     { TOK(OP_NE); }
+"<"                      { TOK(OP_LT); }
+">"                      { TOK(OP_GT); }
 
     /* -------------------- Logical operators -------------------- */
-"&&"                     { TOK(AND); }
-"||"                     { TOK(OR); }
-"!"                      { TOK(NOT); }
+"&&"                     { TOK(OP_AND); }
+"||"                     { TOK(OP_OR); }
+"!"                      { TOK(OP_NOT); }
 
     /* -------------------- Assignment -------------------- */
-"="                      { TOK(ASSIGN); }
+"="                      { TOK(OP_ASSIGN); }
 
     /* -------------------- Delimiters -------------------- */
 "{"                      { TOK(LBRACE); }
 "}"                      { TOK(RBRACE); }
 "("                      { TOK(LPAREN); }
 ")"                      { TOK(RPAREN); }
-";"                      { TOK(SEMI); }
+";"                      { TOK(SEMICOLON); }
 
     /* -------------------- Invalid tokens -------------------- */
 .                        {

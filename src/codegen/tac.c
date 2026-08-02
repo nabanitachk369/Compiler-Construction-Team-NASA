@@ -31,10 +31,10 @@ void add_instruction(TACGenerator* gen, TACType type, char* result,
                      char* arg1, char* arg2, char* operator) {
     TACInstruction* instr = (TACInstruction*)malloc(sizeof(TACInstruction));
     instr->type = type;
-    instr->result = result;
-    instr->arg1 = arg1;
-    instr->arg2 = arg2;
-    instr->operator = operator;
+    instr->result = result ? strdup(result) : NULL;
+    instr->arg1 = arg1 ? strdup(arg1) : NULL;
+    instr->arg2 = arg2 ? strdup(arg2) : NULL;
+    instr->operator = operator ? strdup(operator) : NULL;
     instr->next = NULL;
     
     if (gen->head == NULL) {
@@ -86,8 +86,6 @@ void generate_expression(ASTNode* node, TACGenerator* gen, char** result) {
             add_instruction(gen, TAC_BINARY, temp, left_result, right_result, 
                           node->data.binary_op.operator);
             
-            free(left_result);
-            free(right_result);
             *result = temp;
             break;
         }
@@ -100,7 +98,6 @@ void generate_expression(ASTNode* node, TACGenerator* gen, char** result) {
             add_instruction(gen, TAC_UNARY, temp, operand_result, NULL, 
                           node->data.unary_op.operator);
             
-            free(operand_result);
             *result = temp;
             break;
         }
@@ -120,7 +117,6 @@ void generate_statement(ASTNode* node, TACGenerator* gen) {
             generate_expression(node->data.assignment.expr, gen, &result);
             add_instruction(gen, TAC_ASSIGN, strdup(node->data.assignment.name), 
                           result, NULL, NULL);
-            free(result);
             break;
         }
         
@@ -128,7 +124,6 @@ void generate_statement(ASTNode* node, TACGenerator* gen) {
             char* result;
             generate_expression(node->data.print_stmt.expr, gen, &result);
             add_instruction(gen, TAC_PRINT, NULL, result, NULL, NULL);
-            free(result);
             break;
         }
         
@@ -140,7 +135,6 @@ void generate_statement(ASTNode* node, TACGenerator* gen) {
             char* label_end = new_label(gen);
             
             add_instruction(gen, TAC_IF_GOTO, NULL, cond_result, label_false, "==");
-            free(cond_result);
             
             generate_statement(node->data.if_stmt.then_stmt, gen);
             add_instruction(gen, TAC_GOTO, NULL, NULL, label_end, NULL);
@@ -164,7 +158,6 @@ void generate_statement(ASTNode* node, TACGenerator* gen) {
             char* cond_result;
             generate_expression(node->data.while_stmt.condition, gen, &cond_result);
             add_instruction(gen, TAC_IF_GOTO, NULL, cond_result, label_end, "==");
-            free(cond_result);
             
             generate_statement(node->data.while_stmt.body, gen);
             add_instruction(gen, TAC_GOTO, NULL, NULL, label_start, NULL);
